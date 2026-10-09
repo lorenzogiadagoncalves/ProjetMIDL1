@@ -28,8 +28,7 @@ def allVars_r(f: Form) -> list[Var]:
 def a_or_t_appcond(fs: list[Form], s: Seq) -> bool:
     match (fs, s):
         case ([Not(Or(a, b))], Seq(g, FF())):
-            # TODO: condition d'applicabilité étendue
-            return True
+            return not (Not(a) in g and Not(b) in g)
         case _:
             return False
 
