@@ -22,4 +22,11 @@ def test_b_or_t_appcond():
     assert b_or_t_appcond([Or(a,b)],C) == False #pas de or
     assert b_or_t_appcond([Or(a,b)],D) == False #pas le bon or
 
-test_b_or_t_appcond()
+def test_b_or_t_action():
+    a,b,c,d = makeVars("a","b","c","d")
+    A = Seq([Or(a,b),c],FF())
+    B = Seq([Or(a,b),Or(a,c)],FF())
+    C = Seq([a,b],d)
+    D = Seq([Or(a,c)],b)
+    assert b_or_t_action([Or(a,b)],A) == [Seq([Or(a,b),c,a],FF()),Seq([Or(a,b),c,b],FF())]
+    assert b_or_t_action([Or(a,c)],B) == [Seq([Or(a,b),Or(a,c),a],FF()),Seq([Or(a,b),Or(a,c),c],FF())]
