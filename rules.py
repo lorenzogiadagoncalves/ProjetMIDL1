@@ -25,3 +25,5 @@ def b_or_t_action(fs: list[Form], s: Seq) -> list[Seq]:
             return ([Seq(g+[a],FF()),Seq(g+[b],FF())])
         case _:
             return ([])
+
+b_or_t_rule = Rule("b_or_t", b_or_t_appcond, b_or_t_action)

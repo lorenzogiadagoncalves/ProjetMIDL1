@@ -3,14 +3,12 @@ from datastructs import *
 from rules import *
 
 
-def makeVars(*vars:tuple[str]) -> tuple[Var]:
+def makeVars(*vars: list[str]) -> tuple[Var]:
     """
-    fonction qui instancie un nombre n de variables propositionnelles
-    entree : tuple[str] les noms des variables à instancier
-    sortie : tuple[var] les variables après instantiation
+    fonction qui instancie une nombre x de variables propositionnelles
     """
     if len(vars) == 1:
-        return Var(vars[0])
+        return (Var(vars[0]))
     return tuple([Var(var) for var in vars])
 
 
