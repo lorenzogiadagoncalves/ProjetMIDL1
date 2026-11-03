@@ -41,6 +41,8 @@ def a_or_t_action(fs: list[Form], s: Seq) -> list[Seq]:
 
 a_or_t_rule = Rule("a_or_t", a_or_t_appcond, a_or_t_action)
 
+
+
 def b_or_t_appcond(fs: list[Form], s: Seq) -> bool:
     """
     fonction qui teste les condition d'applicabilité de la règle beta_or de
@@ -68,3 +70,58 @@ def b_or_t_action(fs: list[Form], s: Seq) -> list[Seq]:
             return ([])
 
 b_or_t_rule = Rule("b_or_t", b_or_t_appcond, b_or_t_action)
+
+
+#TODO
+def start_appcond(fs: list[Form], s: Seq) -> bool:
+    match(fs,s):
+        case ([a],Seq(g,b)):
+            return not ((not b) in g)
+        case _:
+            return False
+
+def start_action(fs: list[Form], s: Seq) -> list[Seq]:
+    match(fs,s):
+        case ([a],Seq(g,b)):
+            return ([Seq(g+[b],FF())])
+        case _:
+            return ([])
+
+start_rule = Rule("start", start_appcond,start_action)
+
+
+
+def a_x_f_appcond(fs: list[Form], s: Seq) -> bool:
+    match(fs,s):
+        case ([FF()],Seq(g,FF())):
+            return True
+        case _:
+            return False
+
+def a_x_f_action(fs: list[Form], s: Seq) -> list[Seq]:
+    match(fs,s):
+        case ([FF()],Seq(g,FF())):
+            return ([])
+        case _:
+            return ([])
+
+a_x_f_rule = Rule("AxF", a_x_f_appcond,a_x_f_action)
+
+
+
+def a_x_c_appcond(fs: list[Form], s: Seq) -> bool:
+    match(fs,s):
+        case ([a],Seq(g,FF())):
+            return Not(a) in g
+        case _:
+            return False
+
+
+def a_x_c_action(fs: list[Form], s: Seq) -> list[Seq]:
+    match(fs,s):
+            case ([a],Seq(g,FF())):
+                return ([])
+            case _:
+                return ([])
+
+a_x_c_rule = Rule("AxC", a_x_c_appcond,a_x_c_action)
