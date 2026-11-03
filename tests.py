@@ -50,3 +50,48 @@ def test_b_or_t_action():
 
     assert b_or_t_action([Or(a,b)],A) == [Seq([Or(a,b),c,a],FF()),Seq([Or(a,b),c,b],FF())]
     assert b_or_t_action([Or(a,c)],B) == [Seq([Or(a,b),Or(a,c),a],FF()),Seq([Or(a,b),Or(a,c),c],FF())]
+
+def test_a_and_t_appcond():
+    """
+    fonction qui teste a_and_t_appcond
+    """
+    a,b,c,d = makeVars("a","b","c","d")
+    A = Seq([And(a,b),c],FF())
+    B = Seq([And(a,b),Or(a,c)],FF())
+
+    C = Seq([a,b], d)
+    D = Seq([And(a,c),a,b],b)
+
+    assert b_or_t_appcond([Or(a,b)],A)
+    assert b_or_t_appcond([Or(a,c)],B)
+
+    assert not b_or_t_appcond([Or(a,b)],C) # pas de or
+    assert not b_or_t_appcond([Or(a,b)],D) # variables déjà présentes
+
+
+def test_a_and_t_action():
+    pass
+
+def test_b_and_t_appcond():
+    pass
+
+def test_b_and_t_action():
+    pass
+
+def test_n_t_appcond():
+    pass
+
+def test_n_t_action():
+    pass
+
+def test_a_impl_t_appcond():
+    pass
+
+def test_a_impl_t_action():
+    pass
+
+def test_b_impl_t_appcond():
+    pass
+
+def test_b_impl_t_action():
+    pass
