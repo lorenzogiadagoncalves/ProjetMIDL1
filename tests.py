@@ -55,3 +55,15 @@ def test_n_t_appcond():
 
 def test_n_t_action():
     pass
+
+def test_a_impl_t_appcond():
+    pass
+
+def test_a_impl_t_action():
+    pass
+
+def test_b_impl_t_appcond():
+    pass
+
+def test_b_impl_t_action():
+    pass

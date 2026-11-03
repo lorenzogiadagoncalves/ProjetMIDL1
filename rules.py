@@ -111,8 +111,6 @@ def n_t_action(fs: list[Form], s: Seq) -> list[Seq]:
 
 n_rule = Rule("n_t", n_t_appcond, n_t_action)
 
-#todo
-
 def a_impl_t_appcond(fs: list[Form], s: Seq) -> bool:
     """
     fonction qui teste les condition d'applicabilité de la règle N de
@@ -139,7 +137,7 @@ def a_impl_t_action(fs: list[Form], s: Seq) -> list[Seq]:
         case _:
             return ([])
 
-n_rule = Rule("a_impl_t", a_impl_t_appcond, a_impl_t_action)
+a_impl_t_rule = Rule("a_impl_t", a_impl_t_appcond, a_impl_t_action)
 
 def b_impl_t_appcond(fs: list[Form], s: Seq) -> bool:
     """
@@ -149,8 +147,8 @@ def b_impl_t_appcond(fs: list[Form], s: Seq) -> bool:
     sortie : bool               si la condition d'applicabilité est valide ou non
     """
     match(fs,s):
-        case ([Not(Not(a))],Seq(g,FF())):
-            return (a not in g)
+        case ([Impl(a,b)],Seq(g,FF())):
+            return (Not(a) not in g or b not in g)
         case _:
             return False
 
@@ -162,12 +160,12 @@ def b_impl_t_action(fs: list[Form], s: Seq) -> list[Seq]:
     sortie : list[Seq]          la liste des sequent qui résultent de l'application de la règle
     """
     match(fs,s):
-        case ([Not(Not(a))],Seq(g,FF())):
-            return ([Seq(g+[a],FF())])
+        case ([Impl(a,b)],Seq(g,FF())):
+            return ([Seq(g+[Not(a)],FF()),Seq(g+[b],FF())])
         case _:
             return ([])
 
-n_rule = Rule("b_impl_t", b_impl_t_appcond, b_impl_t_action)
+b_impl_t_rule = Rule("b_impl_t", b_impl_t_appcond, b_impl_t_action)
 
 
-rulesList = [a_and_t_rule,b_and_t_rule,n_rule]
+rulesList = [a_and_t_rule,b_and_t_rule,n_rule,a_impl_t_rule,b_impl_t_rule]
