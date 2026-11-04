@@ -24,6 +24,13 @@ def allVars_r(f: Form) -> list[Var]:
             return allVars_r(a) + allVars_r(b)
         case f:
             return [f]
+
+def insert_form(seq: Seq, form : Form):
+    if form not in seq.hyps:
+        return Seq(seq.hyps+[form],seq.concl)
+    else:
+        return []
+
 def a_and_t_appcond(fs: list[Form], s: Seq) -> bool:
     """
     fonction qui teste les condition d'applicabilité de la règle alpha_and de
@@ -60,7 +67,7 @@ def b_and_t_appcond(fs: list[Form], s: Seq) -> bool:
     sortie : bool               si la condition d'applicabilité est valide ou non
     """
     match(fs,s):
-        case ([And(a,b)],Seq(g,FF())):
+        case ([Not(And(a,b))],Seq(g,FF())):
             return ((Not(a) not in g) or (Not(b) not in g))
         case _:
             return False
@@ -73,8 +80,10 @@ def b_and_t_action(fs: list[Form], s: Seq) -> list[Seq]:
     sortie : list[Seq]          la liste des sequent qui résultent de l'application de la règle
     """
     match(fs,s):
-        case ([And(a,b)],Seq(g,FF())):
-            return ([Seq(g+[Not(a)],FF()),Seq(g+[Not(b)],FF())])
+        case ([Not(And(a,b))],Seq(g,FF())):
+            seq1,seq2 = (insert_form(Seq(g,FF()),Not(a)),insert_form(Seq(g,FF()),Not(b)))
+            listRetour = [seq1] if seq2 == [] else [seq2] if seq1 == [] else [seq1,seq2]
+            return (listRetour)
         case _:
             return ([])
 
@@ -146,7 +155,7 @@ def b_impl_t_appcond(fs: list[Form], s: Seq) -> bool:
     """
     match(fs,s):
         case ([Impl(a,b)],Seq(g,FF())):
-            return (Not(a) not in g or b not in g)
+            return ((Not(a) not in g) or (b not in g))
         case _:
             return False
 
@@ -159,7 +168,9 @@ def b_impl_t_action(fs: list[Form], s: Seq) -> list[Seq]:
     """
     match(fs,s):
         case ([Impl(a,b)],Seq(g,FF())):
-            return ([Seq(g+[Not(a)],FF()),Seq(g+[b],FF())])
+            seq1,seq2 = (insert_form(Seq(g,FF()),Not(a)),insert_form(Seq(g,FF()),b))
+            listRetour = [seq1] if seq2 == [] else [seq2] if seq1 == [] else [seq1,seq2]
+            return (listRetour)
         case _:
             return ([])
 
@@ -209,7 +220,9 @@ def b_or_t_action(fs: list[Form], s: Seq) -> list[Seq]:
     """
     match(fs,s):
         case ([Or(a,b)],Seq(g,FF())):
-            return ([Seq(g+[a],FF()),Seq(g+[b],FF())])
+            seq1,seq2 = (insert_form(Seq(g,FF()),a),insert_form(Seq(g,FF()),b))
+            listRetour = [seq1] if seq2 == [] else [seq2] if seq1 == [] else [seq1,seq2]
+            return (listRetour)
         case _:
             return ([])
 
@@ -220,14 +233,14 @@ b_or_t_rule = Rule("b_or_t", b_or_t_appcond, b_or_t_action)
 def start_appcond(fs: list[Form], s: Seq) -> bool:
     match(fs,s):
         case ([a],Seq(g,b)):
-            return not ((not b) in g)
+            return not ((Not(b)) in g)
         case _:
             return False
 
 def start_action(fs: list[Form], s: Seq) -> list[Seq]:
     match(fs,s):
         case ([a],Seq(g,b)):
-            return ([Seq(g+[b],FF())])
+            return ([Seq(g+[Not(b)],FF())])
         case _:
             return ([])
 
@@ -245,7 +258,7 @@ def a_x_f_appcond(fs: list[Form], s: Seq) -> bool:
 def a_x_f_action(fs: list[Form], s: Seq) -> list[Seq]:
     match(fs,s):
         case ([FF()],Seq(g,FF())):
-            return ([])
+            return ([[]])
         case _:
             return ([])
 
@@ -264,7 +277,7 @@ def a_x_c_appcond(fs: list[Form], s: Seq) -> bool:
 def a_x_c_action(fs: list[Form], s: Seq) -> list[Seq]:
     match(fs,s):
             case ([a],Seq(g,FF())):
-                return ([])
+                return ([[]])
             case _:
                 return ([])
 

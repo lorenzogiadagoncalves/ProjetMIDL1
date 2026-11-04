@@ -1,5 +1,6 @@
 from datastructs import *
 from rules import *
+from proof import *
 
 f1 = Var("a")
 f2 = FF()
@@ -95,3 +96,8 @@ def test_b_impl_t_appcond():
 
 def test_b_impl_t_action():
     pass
+
+a,b,c = makeVars("a","b","c")
+
+
+print(prove_seq(seq))
