@@ -48,7 +48,7 @@ def next_proof_state(ps: ProofStateV0) -> list[ProofStateV0]:
         La liste des listes des séquents dérivés, une par séquent de départ.
     """
 
-    seq = ps[0]  # on sait que ps est non vide sinon on aurait une preuve
+    seq = ps[0] # on sait que ps est non vide sinon on aurait une preuve
     othersSeq = ps[1 : len(ps)]
 
     listProofState = []
