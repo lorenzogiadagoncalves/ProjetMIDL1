@@ -42,8 +42,15 @@ def allVars_r(f: Form) -> list[Var]:
             return [f]
 
 
+def insert_form(seq: Seq, form: Form):
+    if form not in seq.hyps:
+        return Seq(seq.hyps + [form], seq.concl)
+    else:
+        return []
+
+
 # RÈGLES
-## Règle Start (S). TODO
+## Règle Start (S).
 def start_t_appcond(fs: list[Form], s: Seq) -> bool:
     """
     Teste l'applicabilité de la règle Start (S).
@@ -57,8 +64,8 @@ def start_t_appcond(fs: list[Form], s: Seq) -> bool:
     """
 
     match (fs, s):
-        case ([], Seq(g, b)):
-            return not (Not(b) in g)
+        case ([a], Seq(g, b)):
+            return not ((Not(b)) in g)
         case _:
             return False
 
@@ -76,8 +83,8 @@ def start_t_action(fs: list[Form], s: Seq) -> list[Seq]:
     """
 
     match (fs, s):
-        case ([], Seq(g, b)):
-            return [Seq(g + [b], FF())]
+        case ([a], Seq(g, b)):
+            return [Seq(g + [Not(b)], FF())]
         case _:
             return []
 
@@ -119,7 +126,7 @@ def ax_f_t_action(fs: list[Form], s: Seq) -> list[Seq]:
 
     match (fs, s):
         case ([FF()], Seq(g, FF())):
-            return []
+            return [[]]
         case _:
             return []
 
@@ -161,7 +168,7 @@ def ax_c_t_action(fs: list[Form], s: Seq) -> list[Seq]:
 
     match (fs, s):
         case ([a], Seq(g, FF())):
-            return []
+            return [[]]
         case _:
             return []
 
@@ -269,7 +276,7 @@ def b_and_t_appcond(fs: list[Form], s: Seq) -> bool:
     """
 
     match (fs, s):
-        case ([And(a, b)], Seq(g, FF())):
+        case ([Not(And(a, b))], Seq(g, FF())):
             return (Not(a) not in g) or (Not(b) not in g)
         case _:
             return False
@@ -286,10 +293,16 @@ def b_and_t_action(fs: list[Form], s: Seq) -> list[Seq]:
     Retourne :
         Les séquents dérivés de la règle.
     """
-
     match (fs, s):
-        case ([And(a, b)], Seq(g, FF())):
-            return [Seq(g + [Not(a)], FF()), Seq(g + [Not(b)], FF())]
+        case ([Not(And(a, b))], Seq(g, FF())):
+            seq1, seq2 = (
+                insert_form(Seq(g, FF()), Not(a)),
+                insert_form(Seq(g, FF()), Not(b)),
+            )
+            listRetour = (
+                [seq1] if seq2 == [] else [seq2] if seq1 == [] else [seq1, seq2]
+            )
+            return listRetour
         case _:
             return []
 
@@ -373,7 +386,11 @@ def b_or_t_action(fs: list[Form], s: Seq) -> list[Seq]:
 
     match (fs, s):
         case ([Or(a, b)], Seq(g, FF())):
-            return [Seq(g + [a], FF()), Seq(g + [b], FF())]
+            seq1, seq2 = (insert_form(Seq(g, FF()), a), insert_form(Seq(g, FF()), b))
+            listRetour = (
+                [seq1] if seq2 == [] else [seq2] if seq1 == [] else [seq1, seq2]
+            )
+            return listRetour
         case _:
             return []
 
@@ -438,7 +455,7 @@ def b_impl_t_appcond(fs: list[Form], s: Seq) -> bool:
 
     match (fs, s):
         case ([Impl(a, b)], Seq(g, FF())):
-            return Not(a) not in g or b not in g
+            return (Not(a) not in g) or (b not in g)
         case _:
             return False
 
@@ -457,7 +474,14 @@ def b_impl_t_action(fs: list[Form], s: Seq) -> list[Seq]:
 
     match (fs, s):
         case ([Impl(a, b)], Seq(g, FF())):
-            return [Seq(g + [Not(a)], FF()), Seq(g + [b], FF())]
+            seq1, seq2 = (
+                insert_form(Seq(g, FF()), Not(a)),
+                insert_form(Seq(g, FF()), b),
+            )
+            listRetour = (
+                [seq1] if seq2 == [] else [seq2] if seq1 == [] else [seq1, seq2]
+            )
+            return listRetour
         case _:
             return []
 

@@ -5,6 +5,16 @@ from rules import *
 from proof import *
 
 # UTILITAIRES
+# TODO: enlever?
+f1 = Var("a")
+f2 = FF()
+f3 = And(Var("a"), Var("b"))
+f4 = Or(Var("a"), Var("b"))
+f5 = Impl(Var("a"), Var("b"))
+f6 = Or(Impl(And(Var("a"), FF()), Not(Var("b"))), Var("a"))
+lf = [f1, f2, f3, f4, f5, f6]
+
+
 def makeVars(*vars: list[str]):
     """
     Instancie n variables propositionnelles.
@@ -20,6 +30,7 @@ def makeVars(*vars: list[str]):
         return Var(vars[0])
     else:
         return tuple([Var(var) for var in vars])
+
 
 # TESTS
 ## Règles
@@ -67,17 +78,23 @@ class TestRules(unittest.TestCase):
         self.assertTrue(b_or_t_appcond([Or(a, b)], A))
         self.assertTrue(b_or_t_appcond([Or(a, c)], B))
 
-        self.assertFalse(b_or_t_appcond([Or(a, b)], C)) # pas de or
-        self.assertFalse(b_or_t_appcond([Or(a, b)], D)) # pas le bon or
+        self.assertFalse(b_or_t_appcond([Or(a, b)], C))  # pas de or
+        self.assertFalse(b_or_t_appcond([Or(a, b)], D))  # pas le bon or
 
-        self.assertEqual(b_or_t_action([Or(a, b)], A), [
-            Seq([Or(a, b), c, a], FF()),
-            Seq([Or(a, b), c, b], FF()),
-        ])
-        self.assertEqual(b_or_t_action([Or(a, c)], B), [
-            Seq([Or(a, b), Or(a, c), a], FF()),
-            Seq([Or(a, b), Or(a, c), c], FF()),
-        ])
+        self.assertEqual(
+            b_or_t_action([Or(a, b)], A),
+            [
+                Seq([Or(a, b), c, a], FF()),
+                Seq([Or(a, b), c, b], FF()),
+            ],
+        )
+        self.assertEqual(
+            b_or_t_action([Or(a, c)], B),
+            [
+                Seq([Or(a, b), Or(a, c), a], FF()),
+                Seq([Or(a, b), Or(a, c), c], FF()),
+            ],
+        )
 
     def test_a_impl_t(self):
         pass
@@ -91,7 +108,8 @@ class TestProofs(unittest.TestCase):
     def test_prove_seq(self):
         a, b, c, d = makeVars("a", "b", "c", "d")
 
-        seq = Seq([a], b)
+        # TODO: séquent d'exemple
+        seq = Seq([a], a)
 
         self.assertEqual(prove_seq(seq), [[]])
 
