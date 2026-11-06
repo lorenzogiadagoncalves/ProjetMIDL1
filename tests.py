@@ -1,97 +1,100 @@
+import unittest
+
 from datastructs import *
 from rules import *
+from proof import *
 
-f1 = Var("a")
-f2 = FF()
-f3 = And(Var("a"),Var("b"))
-f4 = Or(Var("a"),Var("b"))
-f5 = Impl(Var("a"),Var("b"))
-f6 = Or(Impl(And(Var("a"), FF()), Not(Var("b"))), Var("a"))
-lf = [f1,f2,f3,f4,f5,f6]
-
+# UTILITAIRES
 def makeVars(*vars: list[str]):
     """
-    fonction qui instancie une nombre x de variables propositionnelles
-    """
-    if len(vars) == 1:
-        return (Var(vars[0]))
-    return tuple([Var(var) for var in vars])
+    Instancie n variables propositionnelles.
 
-def runTest() -> None:
-    ...
+    Paramètres :
+        *vars (list[str]) : toutes les variables à instancier.
+
+    Retourne :
+        Les mêmes variables que données en paramètres, enveloppées dans des Var.
+    """
+
+    if len(vars) == 1:
+        return Var(vars[0])
+    else:
+        return tuple([Var(var) for var in vars])
+
+# TESTS
+## Règles
+class TestRules(unittest.TestCase):
+    def test_start_t(self):
+        pass
+
+    def test_ax_f_t(self):
+        pass
+
+    def test_ax_c_t(self):
+        pass
+
+    def test_n_t(self):
+        pass
+
+    def test_a_and_t(self):
+        a, b, c, d = makeVars("a", "b", "c", "d")
+        A = Seq([And(a, b), c], FF())
+        B = Seq([And(a, b), Or(a, c)], FF())
+
+        C = Seq([a, b], d)
+        D = Seq([And(a, c), a, b], b)
+
+        self.assertTrue(b_or_t_appcond([Or(a, b)], A))
+        self.assertTrue(b_or_t_appcond([Or(a, c)], B))
+
+        self.assertFalse(b_or_t_appcond([Or(a, b)], C))  # pas de or
+        self.assertFalse(b_or_t_appcond([Or(a, b)], D))  # variables déjà présentes
+
+    def test_b_and_t(self):
+        pass
+
+    def test_a_or_t(self):
+        pass
+
+    def test_b_or_t(self):
+        a, b, c, d = makeVars("a", "b", "c", "d")
+        A = Seq([Or(a, b), c], FF())
+        B = Seq([Or(a, b), Or(a, c)], FF())
+
+        C = Seq([a, b], d)
+        D = Seq([Or(a, c)], b)
+
+        self.assertTrue(b_or_t_appcond([Or(a, b)], A))
+        self.assertTrue(b_or_t_appcond([Or(a, c)], B))
+
+        self.assertFalse(b_or_t_appcond([Or(a, b)], C)) # pas de or
+        self.assertFalse(b_or_t_appcond([Or(a, b)], D)) # pas le bon or
+
+        self.assertEqual(b_or_t_action([Or(a, b)], A), [
+            Seq([Or(a, b), c, a], FF()),
+            Seq([Or(a, b), c, b], FF()),
+        ])
+        self.assertEqual(b_or_t_action([Or(a, c)], B), [
+            Seq([Or(a, b), Or(a, c), a], FF()),
+            Seq([Or(a, b), Or(a, c), c], FF()),
+        ])
+
+    def test_a_impl_t(self):
+        pass
+
+    def test_b_impl_t(self):
+        pass
+
+
+## Preuves
+class TestProofs(unittest.TestCase):
+    def test_prove_seq(self):
+        a, b, c, d = makeVars("a", "b", "c", "d")
+
+        seq = Seq([a], b)
+
+        self.assertEqual(prove_seq(seq), [[]])
+
 
 if __name__ == "__main__":
-    runTest()
-
-def test_b_or_t_appcond():
-    """
-    fonction qui teste b_or_t_appcond
-    """
-    a,b,c,d = makeVars("a","b","c","d")
-    A = Seq([Or(a,b),c],FF())
-    B = Seq([Or(a,b),Or(a,c)],FF())
-
-    C = Seq([a,b],d)
-    D = Seq([Or(a,c)],b)
-
-    assert b_or_t_appcond([Or(a,b)],A) == True
-    assert b_or_t_appcond([Or(a,c)],B) == True
-
-    assert b_or_t_appcond([Or(a,b)],C) == False #pas de or
-    assert b_or_t_appcond([Or(a,b)],D) == False #pas le bon or
-
-def test_b_or_t_action():
-    """
-    fonction qui teste b_or_t_action
-    """
-    a,b,c,d = makeVars("a","b","c","d")
-    A = Seq([Or(a,b),c],FF())
-    B = Seq([Or(a,b),Or(a,c)],FF())
-
-    assert b_or_t_action([Or(a,b)],A) == [Seq([Or(a,b),c,a],FF()),Seq([Or(a,b),c,b],FF())]
-    assert b_or_t_action([Or(a,c)],B) == [Seq([Or(a,b),Or(a,c),a],FF()),Seq([Or(a,b),Or(a,c),c],FF())]
-
-def test_a_and_t_appcond():
-    """
-    fonction qui teste a_and_t_appcond
-    """
-    a,b,c,d = makeVars("a","b","c","d")
-    A = Seq([And(a,b),c],FF())
-    B = Seq([And(a,b),Or(a,c)],FF())
-
-    C = Seq([a,b], d)
-    D = Seq([And(a,c),a,b],b)
-
-    assert b_or_t_appcond([Or(a,b)],A)
-    assert b_or_t_appcond([Or(a,c)],B)
-
-    assert not b_or_t_appcond([Or(a,b)],C) # pas de or
-    assert not b_or_t_appcond([Or(a,b)],D) # variables déjà présentes
-
-
-def test_a_and_t_action():
-    pass
-
-def test_b_and_t_appcond():
-    pass
-
-def test_b_and_t_action():
-    pass
-
-def test_n_t_appcond():
-    pass
-
-def test_n_t_action():
-    pass
-
-def test_a_impl_t_appcond():
-    pass
-
-def test_a_impl_t_action():
-    pass
-
-def test_b_impl_t_appcond():
-    pass
-
-def test_b_impl_t_action():
-    pass
+    unittest.main()
