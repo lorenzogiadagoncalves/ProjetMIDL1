@@ -4,17 +4,8 @@ from datastructs import *
 from rules import *
 from proof import *
 
+
 # UTILITAIRES
-# TODO: enlever?
-f1 = Var("a")
-f2 = FF()
-f3 = And(Var("a"), Var("b"))
-f4 = Or(Var("a"), Var("b"))
-f5 = Impl(Var("a"), Var("b"))
-f6 = Or(Impl(And(Var("a"), FF()), Not(Var("b"))), Var("a"))
-lf = [f1, f2, f3, f4, f5, f6]
-
-
 def makeVars(*vars: list[str]):
     """
     Instancie n variables propositionnelles.

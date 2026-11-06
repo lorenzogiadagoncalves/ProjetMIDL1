@@ -6,6 +6,7 @@ from rules import *
 # FONCTIONS GÉNÉRALES
 PS = TypeVar("PS")
 
+
 def dfs(
     nexts: Callable[[PS], list[PS]], sol: Callable[[PS], bool], states: list[PS]
 ) -> list[PS]:
@@ -28,9 +29,10 @@ def dfs(
         if sol(states[0]):
             return [states[0]]
             # si vous souhaitez continuer la recherche , decommentez :
-            # return [states [0]] + dfs(nexts , sol , nexts(states [0]) + states [1:])
+            # return [states [0]] + dfs(nexts, sol, nexts(states[0]) + states[1:])
         else:
             return dfs(nexts, sol, nexts(states[0]) + states[1:])
+
 
 # RECHERCHE DE PREUVE DANS LE CALCUL T
 def next_proof_state(ps: ProofStateV0) -> list[ProofStateV0]:
@@ -45,40 +47,25 @@ def next_proof_state(ps: ProofStateV0) -> list[ProofStateV0]:
     Retourne :
         La liste des listes des séquents dérivés, une par séquent de départ.
     """
-    # TODO: enlever les prints ?
 
-    seq = ps[0] # on sait que ps est non vide sinon on aurait une preuve
+    seq = ps[0]  # on sait que ps est non vide sinon on aurait une preuve
     othersSeq = ps[1 : len(ps)]
 
     listProofState = []
 
     for i in range(len(seq.hyps)):
-        print("bcl 1", seq.hyps[i])
-
         for rule in rules:
-            print("bcl 2 " + rule.rulename)
-
             if rule.appcond([seq.hyps[i]], seq):
-                print("testé ?")
-                print("avant :", seq)
-
                 listSeq = rule.action([seq.hyps[i]], seq)
-
-                print("listeSeq : [")
-                for a in listSeq:
-                    print(a, ",")
-                print("]")
 
                 for newSeq in listSeq:
                     if newSeq != []:
-                        print("nouveau : ", newSeq)
                         listProofState.append([newSeq] + othersSeq)
-
                     else:
                         listProofState.append(othersSeq)
 
-    print("listeProof finie")
     return listProofState
+
 
 def sol_proof_state(state: ProofStateV0) -> bool:
     """
