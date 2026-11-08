@@ -22,7 +22,6 @@ def dfs(
         Une liste d'états solution des états de départ.
     """
 
-
     if states == []:
         return []
 
@@ -49,11 +48,10 @@ def next_proof_state(ps: ProofStateV0) -> list[ProofStateV0]:
         La liste des listes des séquents dérivés, une par séquent de départ.
     """
 
-    seq = ps[0] # on sait que ps est non vide sinon on aurait une preuve
-    othersSeq = [ps[i] for i in range(1,len(ps))]
+    seq = ps[0]  # on sait que ps est non vide sinon on aurait une preuve
+    othersSeq = [ps[i] for i in range(1, len(ps))]
 
     listProofState = []
-
 
     for i in range(len(seq.hyps)):
         for rule in rules:
@@ -64,7 +62,7 @@ def next_proof_state(ps: ProofStateV0) -> list[ProofStateV0]:
                     if newSeq != []:
                         listNewSeq.append(newSeq)
                 listProofState.append(listNewSeq + othersSeq)
-    
+
     return listProofState
 
 

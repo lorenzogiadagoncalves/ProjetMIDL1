@@ -99,43 +99,40 @@ class TestRules(unittest.TestCase):
 class TestProofs(unittest.TestCase):
     def test_prove_seq(self):
         a, b, c, d = makeVars("a", "b", "c", "d")
-        empty = makeVars("Empty") #de part la construction de l'algorithme de preuve, si on veux prouver quelque chose de la forme : " ⊢ A" on doit forcément le code comme "B ⊢ A" ou B n'a strictement aucune variable en commun avec A (et donc ici B = empty)
+        empty = makeVars(
+            "Empty"
+        )  # de part la construction de l'algorithme de preuve, si on veux prouver quelque chose de la forme : " ⊢ A" on doit forcément le code comme "B ⊢ A" ou B n'a strictement aucune variable en commun avec A (et donc ici B = empty)
 
         # TODO: séquent d'exemple
-        seq = Seq([empty], Impl(Impl(a,b),Impl(Impl(c,b),Impl(Or(a,c),b))))
-        
+        seq = Seq([empty], Impl(Impl(a, b), Impl(Impl(c, b), Impl(Or(a, c), b))))
+
         self.assertEqual(prove_seq(seq), [[]])
 
+        seq = Seq(
+            [empty], Impl(Impl(a, Impl(b, Impl(c, d))), Impl(b, Impl(And(c, a), d)))
+        )
 
-        seq = Seq([empty], Impl(Impl(a,Impl(b,Impl(c,d))),Impl(b,Impl(And(c,a),d))))
-        
         self.assertEqual(prove_seq(seq), [[]])
 
+        seq = Seq([empty], Impl(Not(Or(a, b)), Or(Not(a), Not(b))))
 
-        seq = Seq([empty], Impl(Not(Or(a,b)),Or(Not(a),Not(b))))
-        
         self.assertEqual(prove_seq(seq), [[]])
 
+        seq = Seq([empty], Impl(And(a, b), And(b, a)))
 
-        seq = Seq([empty], Impl(And(a,b),And(b,a)))
-        
         self.assertEqual(prove_seq(seq), [[]])
 
-
-        seq = Seq([Impl(And(a,b),c)],Not(Impl(a,Impl(b,c))))
+        seq = Seq([Impl(And(a, b), c)], Not(Impl(a, Impl(b, c))))
 
         self.assertEqual(prove_seq(seq), [])
 
-
-        seq = Seq([Impl(Not(a),Not(b))],Impl(b,a))
+        seq = Seq([Impl(Not(a), Not(b))], Impl(b, a))
 
         self.assertEqual(prove_seq(seq), [[]])
 
-
-        seq = Seq([Impl(Not(a),Not(b))],Not(Impl(b,a)))
+        seq = Seq([Impl(Not(a), Not(b))], Not(Impl(b, a)))
 
         self.assertEqual(prove_seq(seq), [])
-        
 
 
 if __name__ == "__main__":

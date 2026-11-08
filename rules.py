@@ -46,7 +46,7 @@ def insert_form(seq: Seq, form: Form):
     if form not in seq.hyps:
         return Seq(seq.hyps + [form], seq.concl)
     else:
-        return Seq(seq.hyps,seq.concl)
+        return Seq(seq.hyps, seq.concl)
 
 
 # RÈGLES
