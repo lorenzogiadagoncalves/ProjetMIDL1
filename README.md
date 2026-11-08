@@ -20,7 +20,12 @@ GIADA GONCALVES Lorenzo
 
 Après la création d'un séquent, utilisez la fonction `prove_seq()` de [proof.py](proof.py) pour le prouver.
 
-Pour exécuter les tests individuels sur les règles et quelques autres fonctions, lancez le fichier [tests.py](tests.py).
+## Tests
 
 > [!NOTE]
 > Nous avons utilisé la librairie standard [`unittest`](https://docs.python.org/3/library/unittest.html) pour tester nos fonctions.
+
+Pour exécuter les tests individuels sur les règles et quelques autres fonctions, lancez le fichier [tests.py](tests.py).
+
+Sachez qu'il manque encore des tests pour beaucoup de fonctions, nous en rajouterons au fur et à mesure que nous avancerons sur la v2.
+

@@ -4,6 +4,7 @@ from datastructs import *
 from rules import *
 from proof import *
 
+# TODO: compléter la suite de tests et en rajouter de nouveau
 
 # UTILITAIRES
 def makeVars(*vars: list[str]):
