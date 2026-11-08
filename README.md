@@ -2,9 +2,9 @@
 
 ## Groupe
 
-MONTAUT Tom,
+MONTAUT Tom
 
-DUVOISIN Hector,
+DUVOISIN Hector
 
 GIADA GONCALVES Lorenzo
 
