@@ -120,6 +120,20 @@ class TestProofs(unittest.TestCase):
         
         self.assertEqual(prove_seq(seq), [[]])
 
+
+        seq = Seq([Impl(And(a,b),c)],Not(Impl(a,Impl(b,c))))
+
+        self.assertEqual(prove_seq(seq), [])
+
+
+        seq = Seq([Impl(Not(a),Not(b))],Impl(b,a))
+
+        self.assertEqual(prove_seq(seq), [[]])
+
+
+        seq = Seq([Impl(Not(a),Not(b))],Not(Impl(b,a)))
+
+        self.assertEqual(prove_seq(seq), [])
         
 
 

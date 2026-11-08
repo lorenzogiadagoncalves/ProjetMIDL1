@@ -46,7 +46,7 @@ def insert_form(seq: Seq, form: Form):
     if form not in seq.hyps:
         return Seq(seq.hyps + [form], seq.concl)
     else:
-        return []
+        return Seq(seq.hyps,seq.concl)
 
 
 # RÈGLES
@@ -277,7 +277,7 @@ def b_and_t_appcond(fs: list[Form], s: Seq) -> bool:
 
     match (fs, s):
         case ([Not(And(a, b))], Seq(g, FF())):
-            return (Not(a) not in g) or (Not(b) not in g)
+            return (Not(a) not in g) and (Not(b) not in g)
         case _:
             return False
 
@@ -367,7 +367,7 @@ def b_or_t_appcond(fs: list[Form], s: Seq) -> bool:
 
     match (fs, s):
         case ([Or(a, b)], Seq(g, FF())):
-            return (a not in g) or (b not in g)
+            return (a not in g) and (b not in g)
         case _:
             return False
 
@@ -455,7 +455,7 @@ def b_impl_t_appcond(fs: list[Form], s: Seq) -> bool:
 
     match (fs, s):
         case ([Impl(a, b)], Seq(g, FF())):
-            return (Not(a) not in g) or (b not in g)
+            return (Not(a) not in g) and (b not in g)
         case _:
             return False
 
