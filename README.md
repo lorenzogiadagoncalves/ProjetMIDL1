@@ -2,9 +2,11 @@
 
 ## Groupe
 
-> MONTAUT Tom,
-> DUVOISIN Hector,
-> GIADA GONCALVES Lorenzo
+MONTAUT Tom,
+
+DUVOISIN Hector,
+
+GIADA GONCALVES Lorenzo
 
 
 ## Comment utiliser ?
